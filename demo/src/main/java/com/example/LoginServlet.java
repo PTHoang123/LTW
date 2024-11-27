@@ -12,7 +12,6 @@ public class LoginServlet extends HttpServlet {
     private static final Map<String, String> users = new HashMap<>();
 
     static {
-        // Predefined user for testing
         users.put("testuser", "password123");
     }
 
