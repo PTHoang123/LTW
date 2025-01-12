@@ -1,6 +1,10 @@
 com/example/DatabaseConnectionTest.class
-com/example/LoginServlet.class
+com/example/CheckLoginFilter.class
+com/example/AllJobsServlet.class
 com/example/RegisterServlet.class
+com/example/User.class
 com/example/AddJobServlet.class
+com/example/LoginServlet.class
 com/example/DatabaseConnection.class
+com/example/Job.class
 com/example/HelloServlet.class

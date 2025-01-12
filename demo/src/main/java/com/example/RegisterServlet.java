@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterServlet extends HttpServlet {
-    private static final Map<String, String> users = new HashMap<>();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
@@ -37,5 +36,6 @@ public class RegisterServlet extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        response.sendRedirect("/demo/AllJob.jsp");
     }
 }
