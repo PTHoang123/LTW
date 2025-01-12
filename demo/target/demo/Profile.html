@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>User Profile</h1>
+    </header>
+    <main>
+      <nav>
+        <ul>
+          <li><a href="/demo/AddJob.html">Add Job</a></li>
+          <li><a href="#">All Job</a></li>
+          <li><a href="#">Stats</a></li>
+          <li><a href="/demo/Profile.html">Profile</a></li>
+          <li class="right"><a href="/demo/login.html">Login</a></li>
+          <li class="right"><a href="/demo/register.html">Register</a></li>
+        </ul>
+      </nav>
+      <section class="profile-info">
+        <h2>Profile Information</h2>
+        <p><strong>Username:</strong> <span id="username">JohnDoe</span></p>
+        <p>
+          <strong>Email:</strong> <span id="email">john.doe@example.com</span>
+        </p>
+      </section>
+      <section class="profile-update">
+        <h2>Update Profile</h2>
+        <form action="/update-profile" method="post">
+          <div class="form-group">
+            <label for="new-username">New Username:</label>
+            <input type="text" id="new-username" name="new-username" />
+          </div>
+          <div class="form-group">
+            <label for="new-email">New Email:</label>
+            <input type="email" id="new-email" name="new-email" />
+          </div>
+          <div class="form-group">
+            <label for="new-password">New Password:</label>
+            <input type="password" id="new-password" name="new-password" />
+          </div>
+          <div class="form-group">
+            <button type="submit">Update Profile</button>
+          </div>
+        </form>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2024 My Website</p>
+    </footer>
+  </body>
+</html>

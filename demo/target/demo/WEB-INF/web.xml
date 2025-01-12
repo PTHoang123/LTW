@@ -34,4 +34,14 @@
     <servlet-name>register</servlet-name>
     <url-pattern>/register</url-pattern>
   </servlet-mapping>
+  <!-- Define the AddJobServlet -->
+  
+  <servlet>
+    <servlet-name>addJob</servlet-name>
+    <servlet-class>com.example.AddJobServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>addJob</servlet-name>
+    <url-pattern>/submit-job</url-pattern>
+  </servlet-mapping>
 </web-app>
