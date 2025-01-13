@@ -5,7 +5,6 @@ uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>All Jobs</title>
     <link rel="stylesheet" href="styles.css" />
     <script src="js/jobs.js" defer></script>
@@ -17,26 +16,26 @@ uri="http://java.sun.com/jsp/jstl/core" %>
         <p>Welcome, ${sessionScope.username}</p>
       </c:if>
     </header>
-
+    <nav>
+      <ul>
+        <li><a href="AddJob.jsp">Add Job</a></li>
+        <li><a href="AllJob.jsp">All Jobs</a></li>
+        <li><a href="stats.jsp">Stats</a></li>
+        <li><a href="Profile.jsp">Profile</a></li>
+        <c:choose>
+          <c:when test="${empty sessionScope.userId}">
+            <li class="right"><a href="login.jsp">Login</a></li>
+            <li class="right"><a href="register.jsp">Register</a></li>
+          </c:when>
+          <c:otherwise>
+            <li class="right">
+              <a href="${pageContext.request.contextPath}/logout">Logout</a>
+            </li>
+          </c:otherwise>
+        </c:choose>
+      </ul>
+    </nav>
     <main>
-      <nav>
-        <ul>
-          <li><a href="AddJob.jsp">Add Job</a></li>
-          <li><a href="AllJob.jsp">All Jobs</a></li>
-          <li><a href="stats.jsp">Stats</a></li>
-          <li><a href="Profile.jsp">Profile</a></li>
-          <c:choose>
-            <c:when test="${empty sessionScope.userId}">
-              <li class="right"><a href="login.jsp">Login</a></li>
-              <li class="right"><a href="register.jsp">Register</a></li>
-            </c:when>
-            <c:otherwise>
-              <li class="right"><a href="logout">Logout</a></li>
-            </c:otherwise>
-          </c:choose>
-        </ul>
-      </nav>
-
       <!-- Search bar -->
       <div class="search-bar">
         <input type="text" id="search" placeholder="Search jobs..." />
@@ -61,6 +60,7 @@ uri="http://java.sun.com/jsp/jstl/core" %>
               <th>Type</th>
               <th>Salary</th>
               <th>Actions</th>
+              <th>Posted By</th>
             </tr>
           </thead>
           <tbody>

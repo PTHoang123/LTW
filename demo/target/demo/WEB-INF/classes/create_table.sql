@@ -36,3 +36,19 @@ CREATE TABLE jobs (
     FOREIGN KEY (created_by) REFERENCES users(id),
     INDEX idx_created_by (created_by)
 );
+
+
+-- Update users table
+ALTER TABLE users 
+ADD COLUMN email VARCHAR(100),
+ADD COLUMN image_url VARCHAR(255),
+ADD COLUMN cv_url VARCHAR(255);
+
+-- Update existing table with not null constraint
+ALTER TABLE users
+MODIFY email VARCHAR(100) NOT NULL;
+
+-- Add unique constraint to email
+ALTER TABLE users
+ADD CONSTRAINT uk_users_email UNIQUE (email);
+

@@ -53,7 +53,26 @@
     <servlet-name>allJobs</servlet-name>
     <url-pattern>/getAllJobs</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>deleteJob</servlet-name>
+    <servlet-class>com.example.DeleteJobServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+      <servlet-name>deleteJob</servlet-name>
+      <url-pattern>/deleteJob</url-pattern>
+  </servlet-mapping>
+  <!-- ...existing code... -->
 
+<servlet>
+    <servlet-name>stats</servlet-name>
+    <servlet-class>com.example.StatsServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>stats</servlet-name>
+    <url-pattern>/getJobStats</url-pattern>
+</servlet-mapping>
+
+<!-- ...existing code... -->
   <filter>
     <filter-name>CheckLoginFilter</filter-name>
     <filter-class>com.example.CheckLoginFilter</filter-class>
@@ -67,6 +86,45 @@
       <filter-name>CheckLoginFilter</filter-name>
       <url-pattern>/demo/AllJob.html</url-pattern>
   </filter-mapping>
+  <servlet>
+    <servlet-name>jobDetail</servlet-name>
+    <servlet-class>com.example.JobDetailServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+      <servlet-name>jobDetail</servlet-name>
+      <url-pattern>/jobDetail</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>logout</servlet-name>
+    <servlet-class>com.example.LogoutServlet</servlet-class>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>editJob</servlet-name>
+    <servlet-class>com.example.EditJobServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>editJob</servlet-name>
+    <url-pattern>/editJob</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+      <servlet-name>logout</servlet-name>
+      <url-pattern>/logout</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>updateProfile</servlet-name>
+    <servlet-class>com.example.UpdateProfileServlet</servlet-class>
+    <multipart-config>
+        <location>/tmp</location>
+        <max-file-size>10485760</max-file-size>
+        <max-request-size>20971520</max-request-size>
+        <file-size-threshold>5242880</file-size-threshold>
+    </multipart-config>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>updateProfile</servlet-name>
+    <url-pattern>/updateProfile</url-pattern>
+  </servlet-mapping>
   <jsp-config>
         <jsp-property-group>
             <url-pattern>*.jsp</url-pattern>

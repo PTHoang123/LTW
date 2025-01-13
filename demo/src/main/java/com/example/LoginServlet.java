@@ -1,44 +1,40 @@
 package com.example;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
+import java.sql.*;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import java.util.HashMap;
-import java.util.Map;
+import javax.servlet.http.*;
 
 public class LoginServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         
         try (Connection connection = DatabaseConnection.getConnection()) {
-            String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+            String sql = "SELECT id, username, email, is_admin, image_url, cv_url FROM users WHERE username = ? AND password = ?";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, username);
                 statement.setString(2, password);
                 ResultSet rs = statement.executeQuery();
                 
                 if (rs.next()) {
-                    int userId = rs.getInt("id");
                     HttpSession session = request.getSession();
-                    session.setAttribute("userId", userId);
-                    session.setAttribute("username", username);
+                    session.setAttribute("userId", rs.getInt("id"));
+                    session.setAttribute("username", rs.getString("username"));
+                    session.setAttribute("email", rs.getString("email"));
+                    session.setAttribute("isAdmin", rs.getBoolean("is_admin"));
+                    session.setAttribute("imageUrl", rs.getString("image_url"));
+                    session.setAttribute("cvUrl", rs.getString("cv_url"));
+                    
                     response.sendRedirect("/demo/AddJob.jsp");
                 } else {
-                    response.sendRedirect("/demo/login.html?error=invalid");
+                    response.sendRedirect("/demo/login.jsp?error=invalid");
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            response.sendRedirect("/demo/login.jsp?error=database");
         }
     }
 }

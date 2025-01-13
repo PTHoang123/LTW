@@ -16,63 +16,69 @@ import com.google.gson.Gson;
 public class AllJobsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        String searchTerm = request.getParameter("search");
-        String jobType = request.getParameter("type");
-        
-        System.out.println("Search Term: " + searchTerm); // Debug
-        System.out.println("Job Type: " + jobType); // Debug
-        
-        List<Job> jobs = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT * FROM jobs WHERE 1=1");
-        List<Object> params = new ArrayList<>();
-        
-        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-            sql.append(" AND (LOWER(job_title) LIKE LOWER(?) OR LOWER(company_name) LIKE LOWER(?) OR LOWER(location) LIKE LOWER(?))");
-            String searchPattern = "%" + searchTerm.trim() + "%";
-            params.add(searchPattern);
-            params.add(searchPattern);
-            params.add(searchPattern);
-        }
-        
-        if (jobType != null && !jobType.equals("all")) {
-            sql.append(" AND LOWER(job_type) = LOWER(?)");
-            params.add(jobType);
-        }
-        
-        System.out.println("SQL Query: " + sql.toString()); // Debug
-        
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+        try {
+            String searchTerm = request.getParameter("search");
+            String jobType = request.getParameter("type");
             
-            for (int i = 0; i < params.size(); i++) {
-                stmt.setObject(i + 1, params.get(i));
-                System.out.println("Param " + (i+1) + ": " + params.get(i)); // Debug
+            System.out.println("Search Term: " + searchTerm);
+            System.out.println("Job Type: " + jobType);
+            
+            List<Job> jobs = new ArrayList<>();
+            StringBuilder sql = new StringBuilder(
+                "SELECT j.*, u.username as created_by_username FROM jobs j " +
+                "LEFT JOIN users u ON j.created_by = u.id WHERE 1=1"
+            );
+            
+            List<Object> params = new ArrayList<>();
+            
+            if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+                sql.append(" AND (LOWER(j.job_title) LIKE LOWER(?) OR LOWER(j.company_name) LIKE LOWER(?) OR LOWER(j.location) LIKE LOWER(?))");
+                String searchPattern = "%" + searchTerm.trim() + "%";
+                params.add(searchPattern);
+                params.add(searchPattern);
+                params.add(searchPattern);
             }
             
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                Job job = new Job();
-                job.setId(rs.getInt("id"));
-                job.setJobTitle(rs.getString("job_title"));
-                job.setCompanyName(rs.getString("company_name"));
-                job.setLocation(rs.getString("location"));
-                job.setJobType(rs.getString("job_type"));
-                job.setSalary(rs.getString("salary"));
-                job.setDescription(rs.getString("description"));
-                job.setCreatedBy(rs.getInt("created_by"));
-                jobs.add(job);
+            if (jobType != null && !jobType.equals("all")) {
+                sql.append(" AND LOWER(j.job_type) = LOWER(?)");
+                params.add(jobType);
             }
             
-            System.out.println("Found " + jobs.size() + " jobs"); // Debug
+            sql.append(" ORDER BY j.created_at DESC");
             
-        } catch (SQLException e) {
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+                
+                for (int i = 0; i < params.size(); i++) {
+                    stmt.setObject(i + 1, params.get(i));
+                }
+                
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    Job job = new Job();
+                    job.setId(rs.getInt("id"));
+                    job.setJobTitle(rs.getString("job_title"));
+                    job.setCompanyName(rs.getString("company_name"));
+                    job.setLocation(rs.getString("location"));
+                    job.setJobType(rs.getString("job_type"));
+                    job.setSalary(rs.getString("salary")); 
+                    job.setDescription(rs.getString("description"));
+                    job.setCreatedBy(rs.getInt("created_by"));
+                    job.setCreatedByUsername(rs.getString("created_by_username"));
+                    jobs.add(job);
+                }
+                
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write(new Gson().toJson(jobs));
+                
+            } catch (SQLException e) {
+                e.printStackTrace();
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error occurred");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Server error occurred");
         }
-        
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        String jsonResponse = new Gson().toJson(jobs);
-        System.out.println("JSON Response: " + jsonResponse); // Debug
-        response.getWriter().write(jsonResponse);
     }
 }

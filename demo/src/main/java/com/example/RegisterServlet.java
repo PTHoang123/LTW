@@ -17,25 +17,29 @@ public class RegisterServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        try (Connection connection = DatabaseConnection.getConnection()) {
-            String sql = "SELECT * FROM users WHERE username = ?";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, username);
-                statement.executeQuery();
-                if (statement.getResultSet().next()) {
-                    response.getWriter().println("<h1>Username already exists!</h1>");
-                    return;
+        String email = request.getParameter("email");
+                try (Connection connection = DatabaseConnection.getConnection()) {
+                    // Check if username or email exists
+                    String checkSql = "SELECT * FROM users WHERE username = ? OR email = ?";
+                    try (PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {
+                        checkStmt.setString(1, username);
+                        checkStmt.setString(2, email);
+                        if (checkStmt.executeQuery().next()) {
+                            response.sendRedirect("/demo/register.jsp?error=exists");
+                            return;
+                        }
+                    }
+                
+                    String sql = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+                    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                        statement.setString(1, username);
+                        statement.setString(2, password);
+                        statement.setString(3, email);
+                        statement.executeUpdate();
+                        response.sendRedirect("/demo/AllJob.jsp");
+                    }
+                } catch (SQLException e) {
+                    throw new ServletException(e);
                 }
-            }
-            sql = "INSERT INTO users (username, password) VALUES (?, ?)";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, username);
-                statement.setString(2, password);
-                statement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        response.sendRedirect("/demo/AllJob.jsp");
     }
 }

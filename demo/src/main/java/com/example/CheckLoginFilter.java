@@ -14,7 +14,7 @@ public class CheckLoginFilter implements Filter {
         HttpSession session = request.getSession(false);
         
         boolean isLoggedIn = session != null && session.getAttribute("userId") != null;
-        String loginURI = request.getContextPath() + "/login.html";
+        String loginURI = request.getContextPath() + "/login.jsp";
         
         boolean isLoginPage = request.getRequestURI().equals(loginURI);
         boolean isStaticResource = request.getRequestURI().endsWith(".css") || 

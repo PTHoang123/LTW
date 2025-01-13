@@ -9,6 +9,7 @@ public class Job {
     private String salary;
     private String description;
     private int createdBy;
+    private String createdByUsername;
     // Getters and setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -33,4 +34,7 @@ public class Job {
     
     public int getCreatedBy() { return createdBy; }
     public void setCreatedBy(int createdBy) { this.createdBy = createdBy; }
+
+    public String getCreatedByUsername() { return createdByUsername; }
+    public void setCreatedByUsername(String createdByUsername) { this.createdByUsername = createdByUsername; }
 }

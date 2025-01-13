@@ -16,32 +16,37 @@
             <p>Welcome, ${sessionScope.username}</p>
         </c:if>
     </header>
-
+    <nav>
+        <ul>
+          <li><a href="AddJob.jsp">Add Job</a></li>
+          <li><a href="AllJob.jsp">All Jobs</a></li>
+          <li><a href="stats.jsp">Stats</a></li>
+          <li><a href="Profile.jsp">Profile</a></li>
+          <c:choose>
+            <c:when test="${empty sessionScope.userId}">
+              <li class="right"><a href="login.jsp">Login</a></li>
+              <li class="right"><a href="register.jsp">Register</a></li>
+            </c:when>
+            <c:otherwise>
+              <li class="right">
+                <a href="${pageContext.request.contextPath}/logout">Logout</a>
+              </li>
+            </c:otherwise>
+          </c:choose>
+        </ul>
+      </nav>
     <main>
-        <nav>
-            <ul>
-                <li><a href="AddJob.jsp">Add Job</a></li>
-                <li><a href="AllJob.jsp">All Jobs</a></li>
-                <li><a href="stats.jsp">Stats</a></li>
-                <li><a href="Profile.jsp">Profile</a></li>
-                <c:choose>
-                    <c:when test="${empty sessionScope.userId}">
-                        <li class="right"><a href="login.jsp">Login</a></li>
-                        <li class="right"><a href="register.jsp">Register</a></li>
-                    </c:when>
-                    <c:otherwise>
-                        <li class="right"><a href="logout">Logout</a></li>
-                    </c:otherwise>
-                </c:choose>
-            </ul>
-        </nav>
-
         <c:if test="${empty sessionScope.userId}">
             <p>Please <a href="login.jsp">login</a> to add jobs.</p>
         </c:if>
         
         <c:if test="${not empty sessionScope.userId}">
             <form action="addJob" method="post">
+                <c:if test="${not empty requestScope.error}">
+                    <div class="error-message">
+                        ${requestScope.error}
+                    </div>
+                </c:if>
                 <div class="form-group">
                     <label for="job-title">Job Title:</label>
                     <input type="text" id="job-title" name="job-title" required>
@@ -64,8 +69,12 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="salary">Salary:</label>
-                    <input type="text" id="salary" name="salary" required>
+                    <label for="salary">Salary (VND):</label>
+                    <input type="text" id="salary" name="salary" 
+                           placeholder="e.g., 1000000 VND" 
+                           pattern="^\d+\s*VND$" 
+                           title="Enter amount followed by VND (e.g., 1000000 VND)"
+                           required>
                 </div>
                 <div class="form-group">
                     <label for="description">Job Description:</label>

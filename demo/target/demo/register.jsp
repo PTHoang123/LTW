@@ -24,12 +24,42 @@ uri="http://java.sun.com/jsp/jstl/core" %>
         <form action="register" method="post">
           <div class="form-group">
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required />
+            <input
+              type="text"
+              id="username"
+              name="username"
+              required
+              pattern="[A-Za-z0-9_]{3,20}"
+              title="3-20 characters, letters, numbers and underscore only"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
           </div>
 
           <div class="form-group">
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required />
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              pattern=".{6,}"
+              title="Six or more characters"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="confirm-password">Confirm Password:</label>
+            <input
+              type="password"
+              id="confirm-password"
+              name="confirm-password"
+              required
+              oninput="checkPasswordMatch(this);"
+            />
           </div>
 
           <div class="form-group">
@@ -41,4 +71,13 @@ uri="http://java.sun.com/jsp/jstl/core" %>
       </div>
     </main>
   </body>
+  <script>
+    function checkPasswordMatch(input) {
+      if (input.value != document.getElementById("password").value) {
+        input.setCustomValidity("Passwords must match");
+      } else {
+        input.setCustomValidity("");
+      }
+    }
+  </script>
 </html>
